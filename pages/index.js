@@ -1,114 +1,132 @@
-import Image from "next/image";
-import { Geist, Geist_Mono } from "next/font/google";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
+"use client"
+import Head from "next/head"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 export default function Home() {
+  const API = process.env.NEXT_PUBLIC_API
+  const getData = async (API) => {
+    try {
+      const req = await fetch(API)
+      const data = await req.json()
+      console.log(data)
+    } catch (error) {
+      console.error('Xatolik yuz berdi:', error)
+    }
+  }
+  getData(API)
+  const [login, setLogin] = useState("")
+  const [parol, setParol] = useState("")
+  const [hidden, setHidden] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const router = useRouter()
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (login === "kamron" && parol === "kamron04") {
+      setHidden(false)
+      setLogin("")
+      setParol("")
+      router.push("/salom")
+    } else {
+      setHidden(true)
+    }
+  }
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              pages/index.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <>
+      <Head>
+        <title>Login | Clinika</title>
+        <link rel="icon" href="/logo.svg"></link>
+      </Head>
+      <div className="bg-[#E7E7E7] min-h-screen flex items-center justify-center">
+        <div className="bg-[#FFFFFF] flex items-center justify-center rounded-2xl shadow-lg p-10">
+          <div className="flex flex-col gap-y-[60px] px-[50px]">
+            <div className="flex flex-col gap-y-5">
+              <div className="flex items-center gap-x-5">
+                <img src="/logo.svg" alt="Logo" />
+                <h3 className="font-spaceGrotesk font-bold text-[28px] leading-[35.73px] text-[#000000]">
+                  Clinika
+                </h3>
+              </div>
+              <p className="font-spaceGrotesk font-medium text-[16px] leading-[20.42px] text-[#000000]">
+                Hisobingizga kirish uchun hisob ma'lumotlaringizni kiriting!
+              </p>
+            </div>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-y-10">
+              <div className="flex flex-col gap-y-[17px]">
+                <div className="flex flex-col gap-y-[5px]">
+                  <label
+                    className="font-poppins font-medium text-[16px] leading-6 text-[#000000]"
+                    htmlFor="login"
+                  >
+                    Login
+                  </label>
+                  <div className="flex items-center justify-between border-[1px] border-[#D5D5D5] p-[15px] rounded-[10px] focus-within:border-[#000000]">
+                    <input
+                      onChange={(e) => setLogin(e.target.value)}
+                      value={login}
+                      required
+                      id="login"
+                      type="text"
+                      placeholder="Shavkatjon"
+                      className="w-[90%] outline-none bg-transparent font-poppins font-normal text-[14px] leading-[21px] text-[#000000]"
+                    />
+                    <img
+                      className="cursor-pointer"
+                      src="/verify.svg"
+                      alt="Verify"
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-col gap-y-[10px]">
+                  <div className="flex flex-col gap-y-[5px]">
+                    <label
+                      className="font-poppins font-medium text-[16px] leading-6 text-[#000000]"
+                      htmlFor="password"
+                    >
+                      Parol
+                    </label>
+                    <div className={hidden ? "flex items-center justify-between border-[1px] border-[#D5D5D5] p-[15px] rounded-[10px] focus-within:border-[#000000]" : "flex items-center justify-between border-[1px] border-[#D5D5D5] p-[15px] rounded-[10px] focus-within:border-[#C24B51]"}>
+                      <input
+                        onChange={(e) => setParol(e.target.value)}
+                        value={parol}
+                        required
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Parol"
+                        className="w-[90%] outline-none bg-transparent font-poppins font-normal text-[14px] leading-[21px] text-[#000000]"
+                      />
+                      <img
+                        className="cursor-pointer"
+                        src={showPassword ? "/eye-off.svg" : "/eye.svg"}
+                        alt="Show password"
+                        onClick={() => setShowPassword(!showPassword)}
+                      />
+                    </div>
+                  </div>
+                  <p
+                    className={
+                      hidden
+                        ? "font-spaceGrotesk font-normal text-[14px] leading-[17.86px] text-[#B1B1B1]"
+                        : "hidden"
+                    }
+                  >
+                    <span className="text-[#C24B51]">Parol noto'g'ri. </span>
+                    Iltimos, qayta urinib ko'ring.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="bg-[#71AB65] py-[14px] rounded-[10px] font-poppins font-medium text-[16px] leading-6 text-[#FFFFFF] hover:bg-[#5e924e] transition-colors"
+              >
+                Kirish
+              </button>
+            </form>
+          </div>
+          <div className="hidden lg:block">
+            <img src="/login.svg" alt="Login illustration" />
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </div>
+    </>
+  )
 }
