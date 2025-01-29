@@ -4,16 +4,26 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 export default function Home() {
   const API = process.env.NEXT_PUBLIC_API
-  const getData = async (API) => {
+  console.log('salom', API)
+  const getData = async () => {
+    if (!API) {
+      console.error('API manzili topilmadi. .env.local faylini tekshiring!')
+      return
+    }
     try {
       const req = await fetch(API)
+      if (!req.ok) {
+        throw new Error(`Xatolik: ${req.status} - ${req.statusText}`)
+      }
+
       const data = await req.json()
-      console.log(data)
+      console.log('Maʼlumot olindi:', data)
     } catch (error) {
       console.error('Xatolik yuz berdi:', error)
     }
   }
-  getData(API)
+  getData()
+
   const [login, setLogin] = useState("")
   const [parol, setParol] = useState("")
   const [hidden, setHidden] = useState(false)
